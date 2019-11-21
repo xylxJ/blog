@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- 加载所有的配置文件 -->
+	<context:property-placeholder location="classpath:properties/*.properties" />
+	<context:annotation-config />
+
+	<!--Activemq的连接工厂 -->
+	<bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${activemq_service_url}" />
+	</bean>
+	<!--spring jms为我们提供的连接池 获取一个连接工厂 -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="targetConnectionFactory" />
+	</bean>
+
+	<!-- jms模板 用于进行消息发送 -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+	</bean>
+
+	<!-- 消息成产者 -->
+	<bean id="pushProducer" class="com.ajie.push.impl.SimplePushProducer">
+		<constructor-arg index="0" ref="jmsTemplate" />
+		<property name="threadPool" ref="threadPool" />
+	</bean>
+
+	<!-- 消息目的地 订阅发布模式 -->
+	<bean id="destination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg value="blog-crud" />
+	</bean>
+
+	<bean id="blogMessageComsumer" class="com.ajie.blog.notify.BlogMessageComsumer">
+		<property name="commentService" ref="commentService" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<!--配置消息容器 -->
+	<bean id="jmsContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<!--配置连接工厂 -->
+		<property name="connectionFactory" ref="connectionFactory" />
+		<!--配置监听的队列 -->
+		<property name="destination" ref="destination" />
+		<!--配置消息监听器 -->
+		<property name="messageListener" ref="blogMessageComsumer" />
+	</bean>
+</beans>

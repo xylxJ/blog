@@ -1,0 +1,130 @@
+/* 操作菜单 */
+.hidden{
+	display: none;
+}
+.operating{
+	position: fixed;
+	z-index: 1800;
+	top: 60%;
+	right: 10px;
+	width: 55px;
+	height: 55px;
+	border-radius: 10px;
+	background-color:  rgba(84,84,84,0.9);
+}
+.operating-more{
+	color: #fff;
+	width: 100%;
+	height: 100%;
+	line-height: 55px;
+	text-align: center;
+}
+
+.operating-mask{
+	position: fixed;
+	width:100%;
+	height: 100%;
+	left:0;
+	top:0;
+	z-index: 1801;
+}
+.operating-panel{
+	position: absolute;
+	background-color:  rgba(84,84,84,0.9);
+	border-radius: 15px;
+	/* z-index: 999; */
+	
+}
+
+.operating-text{
+	position: absolute;
+    width: 60px;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.operating-text-left-top{
+    bottom: 10px;
+    right: 0;
+}
+
+.operating-text-left-bottom{
+	top: 60px;
+    right: 0;
+}
+
+.operating-text-right-top{
+	left: 0;
+	bottom: 10px;
+}
+.operating-text-right-bottom{
+	left: 0;
+	top: 60px;
+}
+
+.operating-text-center-top{
+	width: 100%;
+	top: 60px;
+}
+.operating-text-center-bottom{
+	width: 100%;
+	bottom: 10px;
+}
+
+.transform-origin-left {
+	transform-origin: left center;
+}
+
+.transform-origin-right {
+	transform-origin: right center;
+}
+
+.transform-origin-right-top {
+	transform-origin: right top;
+}
+
+.transform-origin-right-bottom {
+	transform-origin: right bottom;
+}
+.transform-origin-left-top {
+	transform-origin: left top;
+}
+.transform-origin-left-bottom {
+	transform-origin: left bottom;
+}
+
+
+.menu_dialog_show{
+	animation: menu_dialog_show .2s  ease-in-out; animation-fill-mode: both;
+}
+.menu_dialog_hide{
+	animation: menu_dialog_hide .2s ease-in-out; animation-fill-mode: both;
+	/* transform-origin: right center; */
+}
+
+.operating-item{
+	position: absolute;
+	width: 40px;
+	height: 150px;
+}
+.operating-item>img{
+	position: absolute;
+	width: 60px;
+	height: 60px;
+}
+
+.menu-bg-transparent{
+	background-color:  rgba(0,0,0,0.3);
+}
+/*动画*/
+@keyframes  menu_dialog_show{
+	0%  {transform: scale(0,0);opacity:0;}
+	100% {transform: scale(1,1);opacity: 1}
+	/* 0% {width: 45px;height: 45px}
+	100%{width: 200px;height: 200px;} */
+}
+@keyframes  menu_dialog_hide{
+	0%  {transform: scale(1,1);opacity:1;}
+	100% {transform: scale(0.1,0.1);opacity: 0;;}
+}

@@ -1,0 +1,19 @@
+* {margin: 0;padding: 0;-webkit-tap-highlight-color: transparent;-webkit-touch-callout: none;}
+body {ont-family: "Helvetica Neue", Helvetica, Arial, sans-serif;font-size: 14px;line-height: 1.42857143;color: #3D3D3D;}
+a {text-decoration: none;}
+.floatR{float: right;}
+.flex{display: flex;}
+ input,textarea,select,a:focus {outline: none;}
+ .color-gre {color: #3399ea;}
+.hidden{display: none};
+.hiddenforce{display: none !important;}
+/* 富文本编辑器java代码部分样式 */
+.language-java{
+	display: inline-block;
+    min-width: calc(100% - 30px);
+    min-width: -webkit-calc(100% - 30px);
+    background: #333;
+    color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+}

@@ -1,0 +1,2 @@
+由于使用nginx反向代理后程序获取到的url是代理后的（如浏览器访问www.nzjie.cn/loadblogs，经过代理访问链接编程127.0.0.1:8080/blog/loadblogs，如果程序直接过去url和uri，得到的结果是代理后的），在处理一些重定向或转发就会导致路径不一致，可以在nginx将原信息放到header里面解决这个问题
+proxy_set_header uri  $request_uri;

@@ -1,0 +1,10 @@
+/* 使夜间模式生效，一般在节点添加.darkMode 切换夜间模式时遍历.darkMode然后添加class darkModeActive
+   如果需要边框生效，要响应添加对应的边框样式
+*/
+.darkModeActive{background: #061F2F !important;color: #b8bfc6 !important}
+ /*上下左右边框*/
+.dark-mode-border.darkModeActive{border: 1px solid #000}
+.dark-mode-border-t.darkModeActive{border-top: 1px solid #000}
+.dark-mode-border-r.darkModeActive{border-right: 1px solid #000}
+.dark-mode-border-b.darkModeActive{border-bottom: 1px solid #000}
+.dark-mode-border-l.darkModeActive{border-left: 1px solid #000}

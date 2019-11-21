@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<!-- 加载所有的配置文件 -->
+	<context:property-placeholder location="classpath:properties/*.properties" />
+
+	<!-- 集中线程池 -->
+	<bean class="com.ajie.chilli.thread.ThreadPool" id="threadPool">
+		<constructor-arg index="0" value="bolg-bg-thread-" />
+		<constructor-arg index="1" value="2" />
+		<constructor-arg index="2" value="30" />
+		<constructor-arg index="3" value="50" />
+		<property name="openSchdule" value="true" />
+		<property name="schedulePoolName" value="blog-schedule-thread-" />
+		<property name="scheduleMinSize" value="1" />
+		<property name="scheduleMaxSize" value="5" />
+	</bean>
+
+	<!-- 这个过滤器一定不能配在spring-mvc的spring文件中 -->
+	<bean id="requestFilter" class="com.ajie.blog.common.RequestFilterExt">
+		<property name="userService" ref="userService" />
+		<property name="encoding" value="utf-8" />
+		<property name="mode" value="intercept" />
+		<property name="redisClient" ref="redisClient" />
+		<property name="remoteCmd" ref="remoteCmd" />
+		<property name="xssOpen" value="true" />
+		<property name="resourceService" ref="resourceService" />
+		<property name="threadPool" ref="threadPool" />
+		<property name="uriList">
+			<list>
+				<value>*addblog*</value>
+			</list>
+		</property>
+		<!-- ssoHost用于跳转到登录页面，线上要使用真正访问sso系统的域名链接，不能使用localhost之类的，因为经过代理之后，系统根本没法知道你真正的域名或访问链接 -->
+		<property name="ssoHost" value="${sso-host}" />
+		<property name="path" value="${access-record-path}" />
+	</bean>
+
+	<bean id="userService" name="userService"
+		class="com.ajie.sso.user.impl.RemoteUserServiceImpl">
+		<constructor-arg index="0" value="${sso-host-native}" />
+		<property name="httpInvoke">
+			<list>
+				<value>${sso-host-native}</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ssourl" name="ssourl" class="java.lang.String">
+		<constructor-arg index="0" value="${sso-host}" />
+	</bean>
+
+	<context:component-scan base-package="com.ajie.blog.blog" />
+	<context:component-scan base-package="com.ajie.blog.comment" />
+	<context:component-scan base-package="com.ajie.blog.label" />
+
+	<!-- 图片服务 -->
+	<bean id="pictureService" class="com.ajie.chilli.picture.impl.PictureServiceImpl">
+		<constructor-arg index="0" ref="uploadService" />
+		<constructor-arg index="1" value="${blog-images-path}" />
+		<constructor-arg index="2" value="${blog-image-url}" />
+		<property name="prefix" value="${blog-image-prefix}" />
+	</bean>
+
+	<!-- 上传服务 -->
+	<bean id="uploadService" class="com.ajie.chilli.remote.impl.UploadServiceImpl">
+		<constructor-arg index="0" ref="sshSessionMgr" />
+	</bean>
+
+	<!-- ssh会话管理服务 -->
+	<bean id="sshSessionMgr" class="com.ajie.chilli.remote.impl.AsynSshSessionMgr">
+		<constructor-arg index="0" ref="connectConfig" />
+		<constructor-arg index="1" value="asyn-blog-image-upload" />
+	</bean>
+
+	<!-- 同步ssh会话管理服务 -->
+	<bean id="blockSshSessionMgr" class="com.ajie.chilli.remote.impl.BlockSshSessionMgr">
+		<constructor-arg index="0" ref="connectConfig" />
+		<constructor-arg index="1" value="asyn-blog-image-upload" />
+	</bean>
+
+	<!-- ssh连接配置 -->
+	<bean id="connectConfig" class="com.ajie.chilli.remote.ConnectConfig">
+		<property name="username" value="${ssh-username}" />
+		<property name="password" value="${ssh-password}" />
+		<property name="host" value="${ssh-host}" />
+		<property name="port" value="${ssh-port}" />
+		<property name="timeout" value="${ssh-timeout}" />
+		<!-- 核心连接数 -->
+		<property name="core" value="${ssh-core}" />
+		<!-- 最大连接数 -->
+		<property name="max" value="${ssh-max}" />
+		<!--任务池大小 -->
+		<property name="workerQueueSize" value="${ssh-workerQueueSize}" />
+	</bean>
+
+	<!-- 远程命令服务 -->
+	<bean id="remoteCmd" class="com.ajie.chilli.remote.impl.RemoteCmdImpl">
+		<constructor-arg index="0" ref="blockSshSessionMgr" />
+	</bean>
+
+	<!-- 资源服务接口 -->
+	<bean id="resourceService" class="com.ajie.resource.impl.RemoteResourceServiceImpl">
+		<property name="urls" value="${resource-service_url}" />
+	</bean>
+
+	<bean class="java.lang.String" id="stopCommand">
+		<constructor-arg index="0" value="${stop-command}" />
+	</bean>
+	<bean class="java.lang.String" id="admin">
+		<constructor-arg index="0" value="${admin-user-name}" />
+	</bean>
+
+	<!-- sso系统内网映射链接 -->
+	<bean class="java.lang.String" id="mappingSso">
+		<constructor-arg index="0" value="${mapping-sso-url}" />
+	</bean>
+
+	<!-- blog系统内网映射链接 -->
+	<bean class="java.lang.String" id="mappingBlog">
+		<constructor-arg index="0" value="${mapping-blog-url}" />
+	</bean>
+	
+	<!-- blog链接 -->
+	<bean class="java.lang.String" id="blogUrl">
+		<constructor-arg index="0" value="${blog-url}" />
+	</bean>
+
+	<bean class="com.ajie.blog.blog.impl.BlogWatcher" id="blogWatcher">
+		<property name="blogService" ref="blogService"></property>
+		<property name="pushProducer" ref="pushProducer"></property>
+	</bean>
+</beans>

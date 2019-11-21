@@ -1,0 +1,69 @@
+body,html{background: #fafafa;}
+.flex{display: flex;}
+div {-webkit-tab-highlight-color: rgba(0,0,0,0); } 
+/* 导航 */
+.header-navi{z-index: 1000; position: fixed;top:0;left:0;width: 100%;height: 45px;line-height: 45px;background: #fff;text-align: right;border-bottom: 1px solid #eee;}
+.header-navi.darkModeActive{border-bottom: 1px solid #000;}
+.header-navi>div{display: inline-block;}
+.header-navi>.user-header{display: inline-flex;align-items: center;height: 100%;margin-right: 15px;cursor: pointer;}
+.header-navi>.user-header div:nth-child(2){margin-left: 10px;color: #337ab7}
+.user-info{display: flex;align-items: center;}
+.user-info>.user-name{display: inline-block;margin-right: 5px;    max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.user-info>.user-header-img{width: 25px; height: 25px;border-radius: 50%;}
+.login-btn{color: blue}
+.addblog{cursor: pointer;padding: 0 10px 0 20px; vertical-align: top;background: url('/blog/images/edit.jpg') no-repeat left center;background-size: 20px;}
+/* 标签按钮 */
+.tag-btn{width: 30px;height: 40px;position: fixed;top: 2px;left: 10px;z-index: 1001;}
+.tag-btn>span{position: absolute;height: 2px;width:30px;background: #bbb;left: 0}
+.tag-btn .bar-icon:nth-child(1){top:8px;}
+.tag-btn .bar-icon:nth-child(2){top:16px;}
+.tag-btn .bar-icon:nth-child(3){top:24px;}
+.tag-btn .bar-icon:nth-child(4){top:32px;}
+/* 标签 */
+.tags-block{position:fixed;width:200px;top: 45px;left:0;transform: translateX(-100%);transition: transform .25s ease-in-out;background: #fff;z-index:10001}
+.tags-block.active{transform: translateX(0%);}
+.list-group{border: 1px solid #eee;border-radius: 3px;}
+.list-group .title { background-color: #337ab7; color: #fff;}
+.list-group .active{color: #337ab7}
+.list-group div+div {border-top: 1px solid #eee;}
+.list-group div {display: inline-block;width: 100%;padding: 10px 0;text-align: center;}
+.tag{cursor: pointer}
+/* 博客内容 */
+.container{margin-top: 55px;margin-bottom: 20px;}
+.blogs>section{border-bottom: 1px solid #eee;padding: 20px 15px;background: #fff;}
+.blogs>section.darkModeActive{border-bottom: 1px solid #000;}
+.blogs .title{font-size: 22px;font-weight: bold;padding-bottom: 10px;cursor: pointer;}
+.abstract-content{padding-bottom: 10px;}
+.extract-list{display: flex;}
+.extract-list>div{width: 50%;white-space: nowrap;align-items: center;}
+.extract-list img{width: 25px;border-radius:50%;height: 25px;}
+.list-left>div,.list-right>div{margin-left: 10px;}
+.list-right{text-align: right;}
+.list-right div:nth-child(1){width:100%;border-right: 1px solid #888;padding-right: 10px;}
+.list-right>div{text-align: right;}
+.log-frame{width: 85%;min-height: 200px;word-wrap:break-word;display: none;}
+.log-nav{padding: 10px;background: #337ab7;display: flex;white-space: nowrap;color: #fff;}
+.log-nav div:nth-child(1){width: 100%}
+.system-info{padding: 10px;border: 1px solid #eee;font-size:12px;}
+.page-log{padding: 10px;}
+.error-font{color: red;}
+.col-green{color:green}
+.col-red{color: red}
+/* 右侧二维码 */
+.qr-code{display: none;text-align: center;font-size: 16px;font-weight: 600;}/* 默认不显示，只有在大屏幕时才显示 */
+/* 平板 */
+@media screen and (min-width: 768px){
+	.tag-btn{display: none;}
+	.container{display: flex;padding: 30px 50px 0 50px;}
+	/* 理论上去了定位，上面设置的z-index不会再生效的啊，怎么还会有效呢，先设为1吧 */
+	.tags-block{position: inherit;z-index: 1;transform:translateX(0);transition:unset;margin-right: 30px;}
+	.blogs{flex:1}
+}
+/**PC桌面*/
+@media screen and (min-width: 1100px){
+	.tags-block{width: 250px;}
+	.qr-code{width: 250px;display: block;margin-left:30px;}
+	/* 隐藏菜单 */
+	.operating {display: none !important;}
+}
+
